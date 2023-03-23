@@ -31,3 +31,21 @@ The service is designed to show details of where it is hosted, and then make a c
 Also included is a powershell test script that you can use to make multiple calls to the service exposed and gather details about the number of zone hops and latency.
 
 ![Powershell Output](_media/ps-output.png)
+
+## Using Linkerd to route requests within the zone
+Service Mesh can help in traffic management inside your cluster. Linkerd uses an algorithm called EWMA, or exponentially weighted moving average, to automatically send requests to the fastest endpoints. This load balancing can improve end-to-end latencies.
+
+### Install Linkerd 
+Please use the steps highlighted to install linkerd in your aks cluster - https://linkerd.io/2.12/getting-started/. You will need to install the linkerd client, the crd and the control plane. Once installed, your linkerd checks should give all green. 
+
+### Inject linkerd inside your deployments
+
+```
+kubectl get -n zonetest deploy -o yaml | linkerd inject - | kubectl apply -f -
+
+```
+
+Now run the powershell script again and you will see the following output
+
+![Powershell Output](_media/linkerd-zonetest.png)
+
